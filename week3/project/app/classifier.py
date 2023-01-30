@@ -60,11 +60,6 @@ class NewsCategoryClassifier:
 
     def predict_proba(self, model_input: dict) -> dict:
         """
-        [TO BE IMPLEMENTED]
-        Using the `self.pipeline` constructed during initialization,
-        run model inference on a given model input, and return the
-        model prediction probability scores across all labels
-
         Output format:
         {
             "label_1": model_score_label_1,
@@ -72,15 +67,26 @@ class NewsCategoryClassifier:
             ...
         }
         """
-        return {}
+
+        output_dict = {}
+        predictions = self.pipeline.predict_proba([model_input['description']])
+
+        # print("labels: ", self.classes)
+        # print("model_input: ",  model_input['description'])
+        # print("predictions: ", predictions.shape, predictions)
+
+        for(label, pred) in zip(self.classes, predictions.squeeze().tolist()):
+            output_dict[label] = pred
+
+        return output_dict
 
     def predict_label(self, model_input: dict) -> str:
         """
-        [TO BE IMPLEMENTED]
-        Using the `self.pipeline` constructed during initialization,
-        run model inference on a given model input, and return the
-        model prediction label
-
         Output format: predicted label for the model input
         """
-        return ""
+    
+        #print(self.classes)
+
+        prediction = self.pipeline.predict([model_input['description']])
+        # print(prediction)
+        return prediction[0]
